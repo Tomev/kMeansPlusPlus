@@ -4,3 +4,4 @@ project(kMeans__)
 set(CMAKE_CXX_STANDARD 17)
 
 add_library(kMeans__ SHARED )
+
