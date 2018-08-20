@@ -4,11 +4,24 @@
 #include "lib/interfaces/clusterRelated/clusteringAlgorithms/i_distanceBasedClusteringAlgorithm.h"
 
 
+enum meansInitializationMethods {
+  CLASSICAL,
+  KPLUSPLUS
+};
+
 /**
  *  Implementation of classic k-means (BIMSEC) algorithm.
  */
 class kMeans : protected i_distanceBasedClusteringAlgorithm {
+  public:
+    kMeans(int meansInitializationMethod);
+
+    std::vector<i_cluster> groupObjects(std::vector<i_cluster> objects);
+  protected:
 
 };
+
+
+
 
 #endif //KMEANS_KMEANS_H
