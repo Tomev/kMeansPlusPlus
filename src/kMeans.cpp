@@ -1,7 +1,13 @@
 #include "kMeans.h"
 
 kMeans::kMeans(int meansInitializationMethod) {
-
+  switch(meansInitializationMethod){
+    case KPLUSPLUS:
+      break;
+    case CLASSICAL:
+    default:
+      break;
+  }
 }
 
 
