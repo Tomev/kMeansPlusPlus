@@ -4,7 +4,7 @@ kMeans::kMeans(int meansInitializationMethod) {
   switch(meansInitializationMethod){
     case KPLUSPLUS:
       break;
-    case CLASSICAL:
+    case FORGY:
     default:
       break;
   }

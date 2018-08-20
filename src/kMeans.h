@@ -5,7 +5,7 @@
 
 
 enum meansInitializationMethods {
-  CLASSICAL,
+  FORGY,
   KPLUSPLUS
 };
 
