@@ -5,6 +5,8 @@ kMeans::kMeans(int meansInitializationMethod) {
     case KPLUSPLUS:
       break;
     case FORGY:
+      break;
+    case CLASSICAL:
     default:
       break;
   }
@@ -23,7 +25,7 @@ std::vector<i_cluster> kMeans::groupObjects(std::vector<i_cluster> objects)
 {
   std::vector<i_cluster> groupedObjects;
 
-  selectInitialMeans();
+
 
   return groupedObjects;
 }

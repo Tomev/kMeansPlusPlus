@@ -5,8 +5,9 @@
 
 
 enum meansInitializationMethods {
-  FORGY,
-  KPLUSPLUS
+  CLASSICAL = 0,
+  FORGY = 1,
+  KPLUSPLUS = 2,
 };
 
 /**
