@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(kMeans__ SHARED src/kMeans.cpp src/kMeans.h
             src/meansInitializationAlgorithms/classicalMeansInitializationAlgorithm.cpp
-            stc/meansInitializationAlgorithms/classicalMeansInitializationAlgorithm.h )
+            src/meansInitializationAlgorithms/classicalMeansInitializationAlgorithm.h )
 
 include_directories(src)
 include_directories(src/lib)
