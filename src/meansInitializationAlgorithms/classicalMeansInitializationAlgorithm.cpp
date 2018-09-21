@@ -1,6 +1,6 @@
 #include "classicalMeansInitializationAlgorithm.h"
 
-std::vector<i_cluster> classicalMeansInitializationAlgorithm::selectInitialMeans(unsigned int k,
-                                                                                 std::vector<i_cluster> objects) {
-  return std::vector<i_cluster>();
+std::vector<clusterPtr> classicalMeansInitializationAlgorithm::selectInitialMeans(unsigned int k,
+                                                                                 std::vector<clusterPtr> objects) {
+  return std::vector<clusterPtr>();
 }

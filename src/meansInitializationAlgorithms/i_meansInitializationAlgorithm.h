@@ -2,6 +2,7 @@
 #define KMEANS_I_MEANSINITIALIZATIONALGORITHM_H
 
 #include "../lib/interfaces/clusterRelated/i_cluster.h"
+#include <memory>
 
 /** @brief Interface class for means initialization algorithm.
  *
@@ -13,7 +14,9 @@ class i_meansInitializationAlgorithm {
      *  @param Vector of objects to selects initial means from and number of means k.
      *  @return Vector of initial means.
      */
-    virtual std::vector<i_cluster> selectInitialMeans(unsigned int k, std::vector<i_cluster> objects) = 0;
+    virtual std::vector<clusterPtr> selectInitialMeans(unsigned int k, std::vector<clusterPtr> objects) = 0;
 };
+
+typedef std::shared_ptr<i_meansInitializationAlgorithm> meansInitializationAlgorithmPtr;
 
 #endif //KMEANS_I_MEANSINITIALIZATIONALGORITHM_H

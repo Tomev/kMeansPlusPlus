@@ -2,7 +2,7 @@
 #define KMEANS_KMEANS_H
 
 #include "lib/interfaces/clusterRelated/clusteringAlgorithms/i_distanceBasedClusteringAlgorithm.h"
-
+#include "meansInitializationAlgorithms/i_meansInitializationAlgorithm.h"
 
 enum meansInitializationMethods {
   CLASSICAL = 0,
@@ -15,11 +15,13 @@ enum meansInitializationMethods {
  */
 class kMeans : protected i_distanceBasedClusteringAlgorithm {
   public:
-    kMeans(int meansInitializationMethod);
+    kMeans(meansInitializationAlgorithmPtr meansInitializationAlgorithm,
+           unsigned int k);
 
-    std::vector<i_cluster> groupObjects(std::vector<i_cluster> objects);
+    std::vector<clusterPtr> groupObjects(std::vector<clusterPtr> objects);
   protected:
-
+    meansInitializationAlgorithmPtr _meansInitializationAlgorithm;
+    unsigned int _k;
 };
 
 

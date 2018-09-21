@@ -5,7 +5,7 @@
 
 class classicalMeansInitializationAlgorithm : public i_meansInitializationAlgorithm {
   public:
-    std::vector<i_cluster> selectInitialMeans(unsigned int k, std::vector<i_cluster> objects) override;
+    std::vector<clusterPtr> selectInitialMeans(unsigned int k, std::vector<clusterPtr> objects) override;
 };
 
 #endif //KMEANS_CLASSICALMEANSINITIALIZATIONALGORITHM_H
