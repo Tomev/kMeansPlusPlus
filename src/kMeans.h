@@ -14,14 +14,22 @@ enum meansInitializationMethods {
  *  Implementation of classic k-means (BIMSEC) algorithm.
  */
 class kMeans : protected i_distanceBasedClusteringAlgorithm {
+
   public:
     kMeans(meansInitializationAlgorithmPtr meansInitializationAlgorithm,
            unsigned int k);
 
     std::vector<clusterPtr> groupObjects(std::vector<clusterPtr> objects);
+
   protected:
     meansInitializationAlgorithmPtr _meansInitializationAlgorithm;
     unsigned int _k;
+    clusterDistanceMeasurePtr _clusterDistanceMeasure;
+    double clusteringIndicator = 0.0;
+
+    bool hasEveryMeanAnObject(std::vector<clusterPtr> means);
+    void assignObjectsToMeans(std::vector<clusterPtr> objects, std::vector<clusterPtr> *means);
+    void recountClusteringIndicator(std::vector<clusterPtr> means);
 };
 
 
