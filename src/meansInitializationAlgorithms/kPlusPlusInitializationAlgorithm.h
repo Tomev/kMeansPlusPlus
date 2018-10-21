@@ -14,6 +14,8 @@ class kPlusPlusInitializationAlgorithm : public i_meansInitializationAlgorithm{
     clusterDistanceMeasurePtr _clusterDistanceMeasure;
 
     std::vector<double> countClustersDistanceFromMeans(std::vector<clusterPtr> means, std::vector<clusterPtr> clusters);
+    std::vector<double> countClustersSelectionProbabilities(std::vector<double> distances);
+    unsigned int findNewMeanIndexAccordingToSelectionProbabilities(std::vector<double> selectionProbabilities);
 
 };
 

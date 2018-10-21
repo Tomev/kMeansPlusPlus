@@ -1,5 +1,6 @@
 #include "kPlusPlusInitializationAlgorithm.h"
 #include <cstdlib>
+#include <cmath>
 
 kPlusPlusInitializationAlgorithm::kPlusPlusInitializationAlgorithm(clusterDistanceMeasurePtr clusterDistanceMeasure)
 : _clusterDistanceMeasure(clusterDistanceMeasure) {}
@@ -16,23 +17,24 @@ std::vector<clusterPtr> kPlusPlusInitializationAlgorithm::selectInitialMeans(uns
   std::vector<clusterPtr> means;
 
   // Randomly select first mean
-  int newMeanIndex = 0;
+  unsigned int newMeanIndex = 0;
   newMeanIndex = rand() % clusters.size();
 
   // Add it to the means and remove from set of considered clusters
   means.push_back(clusters[newMeanIndex]);
   clusters.erase(clusters.begin() + newMeanIndex);
 
-  std::vector<double> clustersDistanceFromMeans;
+  std::vector<double> clustersDistancesFromMeans;
+  std::vector<double> clustersSelectionProbabilities;
 
   // Repeat until desired number of means is achieved
   while(means.size() < k) {
-    clustersDistanceFromMeans = countClustersDistanceFromMeans(means, clusters);
-
+    clustersDistancesFromMeans = countClustersDistanceFromMeans(means, clusters);
+    clustersSelectionProbabilities = countClustersSelectionProbabilities(clustersDistancesFromMeans);
+    newMeanIndex = findNewMeanIndexAccordingToSelectionProbabilities(clustersSelectionProbabilities);
+    means.push_back(clusters[newMeanIndex]);
+    clusters.erase(clusters.begin() + newMeanIndex);
   }
-
-
-
 
   return means;
 }
@@ -66,5 +68,46 @@ std::vector<double> kPlusPlusInitializationAlgorithm::countClustersDistanceFromM
   }
 
   return distances;
+}
+
+/** Counts vector of cluster selection probabilities according to k++ algorithm.
+ *
+ *  @param distances - clusters distances from means set
+ *  @return cluster selection probabilities
+ */
+std::vector<double> kPlusPlusInitializationAlgorithm::countClustersSelectionProbabilities(
+    std::vector<double> distances) {
+  std::vector<double> clustersSelectionProbabilities;
+  double squaredDistancesSum = 0, squaredDistance = 0;
+
+
+  for(double distance : distances)
+  {
+    squaredDistance = pow(distance, 2);
+    squaredDistancesSum += squaredDistance;
+    clustersSelectionProbabilities.push_back(squaredDistance);
+  }
+
+  for(double selectionProbability : clustersSelectionProbabilities)
+    selectionProbability /= squaredDistancesSum;
+
+  return clustersSelectionProbabilities;
+}
+
+/** Selects new mean according to given probabilities vector.
+ *
+ *  @param selectionProbabilities - probability of each cluster to be selected as new mean
+ *  @return New mean index.
+ */
+unsigned int kPlusPlusInitializationAlgorithm::findNewMeanIndexAccordingToSelectionProbabilities(
+    std::vector<double> selectionProbabilities) {
+  unsigned int newMeanIndex = 0;
+  double workingProbabilitiesSum = selectionProbabilities[newMeanIndex];
+  double randomPercent = (double) rand() / RAND_MAX;
+
+  while(randomPercent > workingProbabilitiesSum)
+    workingProbabilitiesSum += selectionProbabilities[++newMeanIndex];
+
+  return newMeanIndex;
 }
 
