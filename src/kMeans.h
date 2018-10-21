@@ -2,6 +2,7 @@
 #define KMEANS_KMEANS_H
 
 #include "lib/interfaces/clusterRelated/clusteringAlgorithms/i_distanceBasedClusteringAlgorithm.h"
+#include "lib/interfaces/clusterRelated/i_clusterDistanceMeasure.h"
 #include "meansInitializationAlgorithms/i_meansInitializationAlgorithm.h"
 
 enum meansInitializationMethods {
@@ -24,12 +25,19 @@ class kMeans : protected i_distanceBasedClusteringAlgorithm {
   protected:
     meansInitializationAlgorithmPtr _meansInitializationAlgorithm;
     unsigned int _k;
+
     clusterDistanceMeasurePtr _clusterDistanceMeasure;
-    double clusteringIndicator = 0.0;
+    objectDistanceMeasurePtr _objectDistanceMeasure;
+
+    double _clusteringIndicator = 0.0, _oldClusteringIndicator = 0.0;
 
     bool hasEveryMeanAnObject(std::vector<clusterPtr> means);
     void assignObjectsToMeans(std::vector<clusterPtr> objects, std::vector<clusterPtr> *means);
     void recountClusteringIndicator(std::vector<clusterPtr> means);
+    bool didClusteringIndicatorChange();
+    void updateMeans(std::vector<clusterPtr> *means);
+
+
 };
 
 

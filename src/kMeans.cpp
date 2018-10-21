@@ -1,5 +1,6 @@
 #include "kMeans.h"
 #include <limits>
+#include <cmath>
 
 kMeans::kMeans(meansInitializationAlgorithmPtr meansInitializationAlgorithm, unsigned int k) {
   _meansInitializationAlgorithm = meansInitializationAlgorithm;
@@ -19,17 +20,20 @@ std::vector<clusterPtr> kMeans::groupObjects(std::vector<clusterPtr> objects)
   std::vector<clusterPtr> groupedObjects;
   std::vector<clusterPtr> means;
 
-  while (hasEveryMeanAnObject(means));
+  while (!hasEveryMeanAnObject(means))
   {
     means = _meansInitializationAlgorithm->selectInitialMeans(_k, objects);
     assignObjectsToMeans(objects, &means);
   }
 
-  recountClusteringIndicator();
-  // assignObjectToMeans;
-  // recountClusteringIndicator;
-  //
+  recountClusteringIndicator(means);
 
+  while (didClusteringIndicatorChange())
+  {
+    updateMeans(&means);
+    assignObjectsToMeans(objects, &means);
+    recountClusteringIndicator(means);
+  }
 
   return groupedObjects;
 }
@@ -58,14 +62,16 @@ bool kMeans::hasEveryMeanAnObject(std::vector<clusterPtr> means) {
  */
 void kMeans::assignObjectsToMeans(std::vector<clusterPtr> objects, std::vector<clusterPtr> *means) {
   clusterPtr closestMean;
+  clusterablePtr currentObject;
   double currentMinimalDistanceValue = 0.0, currentDistanceValue = 0.0;
 
   for(clusterPtr object : objects) {
 
+    currentObject = object->getObject();
     currentMinimalDistanceValue = std::numeric_limits<double>::max();
 
     for(clusterPtr mean : *means) {
-      currentDistanceValue = _clusterDistanceMeasure->getClustersDistance(mean, object);
+      currentDistanceValue = _objectDistanceMeasure->getObjectsDistance(mean->getMean(), currentObject);
 
       if(currentDistanceValue < currentMinimalDistanceValue) {
         currentMinimalDistanceValue = currentDistanceValue;
@@ -77,6 +83,44 @@ void kMeans::assignObjectsToMeans(std::vector<clusterPtr> objects, std::vector<c
   }
 }
 
+/** Updates clustering indicators. Current clustering indicator becomes old one, and new one is count
+ *  in its place.
+ *
+ *  @param Current means.
+ */
 void kMeans::recountClusteringIndicator(std::vector<clusterPtr> means) {
+  _oldClusteringIndicator = _clusteringIndicator;
+  _clusteringIndicator = 0;
 
+  std::vector<clusterPtr> currentMeanSubclusters;
+  clusterablePtr currentMean;
+
+  for(clusterPtr mean : means) {
+    currentMeanSubclusters = mean->getSubclusters();
+    currentMean = mean->getMean();
+    for(clusterPtr subcluster : currentMeanSubclusters) {
+      _clusteringIndicator +=
+          pow(_objectDistanceMeasure->getObjectsDistance(currentMean, subcluster->getObject()), 2);
+    }
+  }
+}
+
+/** Checks if clustering indicator values changed after last recount.
+ *
+ *  @return The result of the check.
+ */
+bool kMeans::didClusteringIndicatorChange() {
+  return fabs(_oldClusteringIndicator - _clusteringIndicator) < 1e-5;
+}
+
+/** Updates each mean form means set according to current subclusters and clears subclusters set.
+ *
+ *  @param means - current means.
+ */
+void kMeans::updateMeans(std::vector<clusterPtr> *means) {
+  for(clusterPtr mean : *means)
+  {
+    mean->updateMean();
+    mean->clearSubclusters();
+  }
 }
